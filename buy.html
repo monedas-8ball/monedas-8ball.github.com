@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprar Monedas</title>
+    <style>
+        :root {
+            --color-primary: #ff3333;
+            --color-secondary: #1a1a1a;
+            --color-background: #f5f5f5;
+            --color-text: #333333;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-background);
+            color: var(--color-text);
+        }
+
+        .navbar {
+            background-color: var(--color-secondary);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .purchase-form {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: #e60000;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="navbar-brand">Comprar Monedas</a>
+    </nav>
+
+    <div class="container">
+        <h1>Comprar Monedas</h1>
+        <form class="purchase-form" id="purchaseForm">
+            <div class="form-group">
+                <label for="coin-amount">¿Cuántas monedas quieres comprar?</label>
+                <select id="coin-amount" name="coin-amount" required>
+                    <option value="">Selecciona una cantidad</option>
+                    <option value="100000">100k</option>
+                    <option value="1000000">1M</option>
+                    <option value="10000000">10M</option>
+                    <option value="100000000">100M</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="name">Nombre</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="lastname">Apellido</label>
+                <input type="text" id="lastname" name="lastname" required>
+            </div>
+            <div class="form-group">
+                <label for="course">Curso</label>
+                <input type="text" id="course" name="course" required>
+            </div>
+            <button type="submit" class="btn">Confirmar Compra</button>
+        </form>
+    </div>
+
+    <script>
+        const webhookURL = 'https://discord.com/api/webhooks/1303071671736995882/XnDDDugxxcuVlWwlMMRSV_b4-8r2MFmBSd__Ja__qQ0NGpF-SbT1VN75uMXrKvLwBCHW';
+
+        const form = document.getElementById('purchaseForm');
+
+        // Envía datos a Discord al enviar el formulario
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const lastname = document.getElementById('lastname').value;
+            const course = document.getElementById('course').value;
+            const coinAmount = document.getElementById('coin-amount').options[document.getElementById('coin-amount').selectedIndex].text;
+
+            const data = {
+                username: "Compra de Monedas",
+                embeds: [{
+                    title: "Nueva Compra de Monedas",
+                    color: 15105570, // Color rojo
+                    fields: [
+                        { name: "Nombre", value: name, inline: true },
+                        { name: "Apellido", value: lastname, inline: true },
+                        { name: "Curso", value: course, inline: true },
+                        { name: "Cantidad de Monedas", value: coinAmount, inline: true }
+                    ],
+                    footer: {
+                        text: "Confirmación de compra"
+                    }
+                }]
+            };
+
+            try {
+                const response = await fetch(webhookURL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('Compra confirmada y enviada a Discord.');
+                } else {
+                    alert('Error al enviar los datos a Discord.');
+                }
+            } catch (error) {
+                alert('Error al enviar los datos a Discord.');
+                console.error('Error:', error);
+            }
+        });
+    </script>
+</body>
+</html>
